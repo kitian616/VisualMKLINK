@@ -104,21 +104,25 @@
   <ItemGroup>
     <ClInclude Include="BackgroundOperations.h" />
     <ClInclude Include="EditX.h" />
+    <ClInclude Include="FilePath.h" />
     <ClInclude Include="ListBoxX.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TypeConversion.h" />
     <ClInclude Include="VisualMKLINK.h" />
     <ClInclude Include="VisualMKLINKDlg.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BackgroundOperations.cpp" />
     <ClCompile Include="EditX.cpp" />
+    <ClCompile Include="FilePath.cpp" />
     <ClCompile Include="ListBoxX.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TypeConversion.cpp" />
     <ClCompile Include="VisualMKLINK.cpp" />
     <ClCompile Include="VisualMKLINKDlg.cpp" />
   </ItemGroup>

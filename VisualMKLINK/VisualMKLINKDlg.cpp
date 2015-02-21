@@ -49,7 +49,7 @@ END_MESSAGE_MAP()
 
 CVisualMKLINKDlg::CVisualMKLINKDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CVisualMKLINKDlg::IDD, pParent)
-	, m_szResult(_T(""))
+	, m_strResult(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDI_ICON_APP);
 	InitUIPIFilter();
@@ -60,7 +60,7 @@ void CVisualMKLINKDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST_TARGET, m_IDC_Target);
 	DDX_Control(pDX, IDC_EDIT_LINK, m_IDC_Link);
-	DDX_Text(pDX, IDC_STATIC_RESULT, m_szResult);
+	DDX_Text(pDX, IDC_STATIC_RESULT, m_strResult);
 }
 
 BEGIN_MESSAGE_MAP(CVisualMKLINKDlg, CDialogEx)
@@ -164,13 +164,13 @@ void CVisualMKLINKDlg::OnBnClickedButtonMklink()
 	BackgroundOperations bgo;
 	for (int i = 0; i < m_IDC_Target.GetCount(); i++)
 	{
-		CString szTargetPath;
-		m_IDC_Target.GetText(i, szTargetPath);
-		DWORD targetFileAttritube = GetFileAttributes(szTargetPath);
+		CString strTargetPath;
+		m_IDC_Target.GetText(i, strTargetPath);
+		DWORD targetFileAttritube = GetFileAttributes(strTargetPath);
 
-		CString szLinkPath;
-		m_IDC_Link.GetWindowTextW(szLinkPath);
-		DWORD linkFileAttritube = GetFileAttributes(szLinkPath);
+		CString strLinkPath;
+		m_IDC_Link.GetWindowTextW(strLinkPath);
+		DWORD linkFileAttritube = GetFileAttributes(strLinkPath);
 		CString cmd;
 		if (INVALID_FILE_ATTRIBUTES == targetFileAttritube)	//target路径必须存在
 		{
@@ -189,8 +189,8 @@ void CVisualMKLINKDlg::OnBnClickedButtonMklink()
 				MessageBox(_T("link路径与target路径不匹配！"));
 				break;
 			}
-			cmd = _T("mklink /D \"") + szLinkPath + _T("\"  \"") + szTargetPath + _T("\"");
-			m_szResult = bgo.ExecuteCMD(cmd);
+			cmd = _T("mklink /D \"") + strLinkPath + _T("\"  \"") + strTargetPath + _T("\"");
+			m_strResult = bgo.ExecuteCMD(cmd);
 		}
 		else if (FILE_ATTRIBUTE_DIRECTORY != targetFileAttritube)	//文件
 		{
@@ -201,25 +201,25 @@ void CVisualMKLINKDlg::OnBnClickedButtonMklink()
 			}
 			else if (FILE_ATTRIBUTE_DIRECTORY == linkFileAttritube)	//	目录
 			{
-				char pFname[_MAX_FNAME];
-				char pExt[_MAX_EXT];
-				char pTargetPath[_MAX_PATH];
-				bgo.CString2Char(szTargetPath, pTargetPath);
-				_splitpath_s(pTargetPath, NULL, 0, NULL, 0, pFname, _MAX_FNAME, pExt, _MAX_EXT);
-				CString szFname;
-				CString szExt;
-				bgo.Char2CString(pFname, szFname);
-				bgo.Char2CString(pExt, szExt);
-				szLinkPath = szLinkPath + _T('\\') + szFname + szExt;
+				char szFname[_MAX_FNAME];
+				char szExt[_MAX_EXT];
+				char szTargetPath[_MAX_PATH];
+				TypeConversion::CString2Char(strTargetPath, szTargetPath);
+				_splitpath_s(szTargetPath, NULL, 0, NULL, 0, szFname, _MAX_FNAME, szExt, _MAX_EXT);
+				CString strFname;
+				CString strExt;
+				TypeConversion::Char2CString(szFname, strFname);
+				TypeConversion::Char2CString(szExt, strExt);
+				strLinkPath = strLinkPath + _T('\\') + strFname + strExt;
 				
 			}
-			cmd = _T("mklink /H \"") + szLinkPath + _T("\"  \"") + szTargetPath + _T("\"");  //文件的硬链接
-			m_szResult = bgo.ExecuteCMD(cmd);
+			cmd = _T("mklink /H \"") + strLinkPath + _T("\"  \"") + strTargetPath + _T("\"");  //文件的硬链接
+			m_strResult = bgo.ExecuteCMD(cmd);
 		}
-		
+		FilePath fp(_T("c:\\q\\wer\\qwrrt\\"));
+		CString sss = fp.GetParentPath().GetFilePath();
 		
 		UpdateData(FALSE);
-
 	}
 	
 }

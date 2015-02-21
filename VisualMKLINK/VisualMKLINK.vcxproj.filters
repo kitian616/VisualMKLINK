@@ -42,6 +42,12 @@
     <ClInclude Include="ListBoxX.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="TypeConversion.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="FilePath.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="VisualMKLINK.cpp">
@@ -60,6 +66,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="ListBoxX.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="TypeConversion.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="FilePath.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

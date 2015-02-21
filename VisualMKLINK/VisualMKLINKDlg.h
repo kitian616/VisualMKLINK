@@ -7,6 +7,8 @@
 #include "ListBoxX.h"
 #include "EditX.h"
 #include "BackgroundOperations.h"
+#include "TypeConversion.h"
+#include "FilePath.h"
 
 
 // CVisualMKLINKDlg ¶Ô»°¿ò
@@ -39,8 +41,6 @@ public:
 private:
 	CListBoxX m_IDC_Target;
 	CEditX m_IDC_Link;
-
-	void InitUIPIFilter();
-public:
-	CString m_szResult;
+	CString m_strResult;
+	void InitUIPIFilter();	
 };
