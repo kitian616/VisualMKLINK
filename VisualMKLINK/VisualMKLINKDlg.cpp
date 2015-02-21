@@ -161,23 +161,63 @@ HCURSOR CVisualMKLINKDlg::OnQueryDragIcon()
 void CVisualMKLINKDlg::OnBnClickedButtonMklink()
 {
 	// TODO:  在此添加控件通知处理程序代码
+	BackgroundOperations bgo;
 	for (int i = 0; i < m_IDC_Target.GetCount(); i++)
 	{
-		CString targetPath;
-		m_IDC_Target.GetText(i, targetPath);
-		if (INVALID_FILE_ATTRIBUTES == GetFileAttributes(targetPath))
+		CString szTargetPath;
+		m_IDC_Target.GetText(i, szTargetPath);
+		DWORD targetFileAttritube = GetFileAttributes(szTargetPath);
+
+		CString szLinkPath;
+		m_IDC_Link.GetWindowTextW(szLinkPath);
+		DWORD linkFileAttritube = GetFileAttributes(szLinkPath);
+		CString cmd;
+		if (INVALID_FILE_ATTRIBUTES == targetFileAttritube)	//target路径必须存在
 		{
-			MessageBox(_T("路径不存在！"));
+			MessageBox(_T("target路径不存在！"));
 			break;
 		}
-		else if (FILE_ATTRIBUTE_DIRECTORY == GetFileAttributes(targetPath))
+		else if (FILE_ATTRIBUTE_DIRECTORY == targetFileAttritube)	//	目录
 		{
-			targetPath += "";
+			if (INVALID_FILE_ATTRIBUTES == linkFileAttritube)	//	目录不存在
+			{
+				MessageBox(_T("link路径不存在！"));
+				break;
+			}
+			else if (FILE_ATTRIBUTE_DIRECTORY != linkFileAttritube)	//	文件
+			{
+				MessageBox(_T("link路径与target路径不匹配！"));
+				break;
+			}
+			cmd = _T("mklink /D \"") + szLinkPath + _T("\"  \"") + szTargetPath + _T("\"");
+			m_szResult = bgo.ExecuteCMD(cmd);
 		}
-		CString linkPath;
-		m_IDC_Link.GetWindowTextW(linkPath);
-		CString cmd = _T("mklink /D \"") + linkPath + _T("\"  \"") + targetPath + _T("\"");
-		m_szResult = BackgroundOperations::ExecuteCMD(cmd);
+		else if (FILE_ATTRIBUTE_DIRECTORY != targetFileAttritube)	//文件
+		{
+			if (INVALID_FILE_ATTRIBUTES == linkFileAttritube)	//	目录不存在
+			{
+				MessageBox(_T("link路径不存在！"));
+				break;
+			}
+			else if (FILE_ATTRIBUTE_DIRECTORY == linkFileAttritube)	//	目录
+			{
+				char pFname[_MAX_FNAME];
+				char pExt[_MAX_EXT];
+				char pTargetPath[_MAX_PATH];
+				bgo.CString2Char(szTargetPath, pTargetPath);
+				_splitpath_s(pTargetPath, NULL, 0, NULL, 0, pFname, _MAX_FNAME, pExt, _MAX_EXT);
+				CString szFname;
+				CString szExt;
+				bgo.Char2CString(pFname, szFname);
+				bgo.Char2CString(pExt, szExt);
+				szLinkPath = szLinkPath + _T('\\') + szFname + szExt;
+				
+			}
+			cmd = _T("mklink /H \"") + szLinkPath + _T("\"  \"") + szTargetPath + _T("\"");  //文件的硬链接
+			m_szResult = bgo.ExecuteCMD(cmd);
+		}
+		
+		
 		UpdateData(FALSE);
 
 	}

@@ -5,8 +5,13 @@ public:
 	BackgroundOperations();
 	~BackgroundOperations();
 
-	static TCHAR* StringToChar(CString& str);
-	static CString ExecuteCommandLine(CString CommandLine);
-	static CString ExecuteCMD(CString CommandLine);
+	void CString2TChar(CString& str, TCHAR* pTchar);
+	void CString2Char(CString& str, char* pChar);
+	void TChar2CString(TCHAR* pTchar, CString& str);
+	void Char2CString(char* pChar, CString& str);
+
+	CString ExecuteCommandLine(CString commandLine);
+	CString ExecuteCMD(CString cmdCommand);
+	
 };
 
