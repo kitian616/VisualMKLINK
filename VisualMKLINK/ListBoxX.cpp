@@ -26,11 +26,12 @@ BEGIN_MESSAGE_MAP(CListBoxX, CListBox)
 END_MESSAGE_MAP()
 
 
+void CListBoxX::SetClearable()
+{
+	m_clearable = true;
+}
 
 // CListBoxWithMenu 消息处理程序
-
-
-
 
 void CListBoxX::OnMenuDelete()
 {
@@ -63,9 +64,6 @@ BOOL CListBoxX::PreTranslateMessage(MSG* pMsg)
 		INT iScrollPos = GetScrollPos(SB_VERT);
 		GetCursorPos(&pt);
 		int iSelect = (pt.y - rtClient.top + iScrollPos * GetItemHeight(0)) / GetItemHeight(0);
-		//CString st=_T("");  
-		//st.Format(_T("%d"),iSelect);  
-		//::AfxMessageBox(st);  
 		SetCurSel(iSelect);
 		RedrawWindow();
 		if (rtClient.PtInRect(pt) && iSelect<GetCount())
@@ -82,6 +80,14 @@ BOOL CListBoxX::PreTranslateMessage(MSG* pMsg)
 void CListBoxX::OnDropFiles(HDROP hDropInfo)
 {
 	// TODO:  在此添加消息处理程序代码和/或调用默认值
+
+	/*当m_clearFlag为true，清空数据*/
+	if (m_clearable)
+	{
+		ResetContent();
+		m_clearable = false;
+	}
+
 	INT DropCount = DragQueryFile(hDropInfo, -1, NULL, 0);//取得被拖动文件的数目
 	WCHAR wcStr[MAX_PATH];
 	for (int i = 0; i < DropCount; i++)

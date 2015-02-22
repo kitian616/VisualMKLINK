@@ -103,6 +103,9 @@ BOOL CVisualMKLINKDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO:  在此添加额外的初始化代码
+	m_IDC_Target.AddString(_T("Drag the Files HEAR!!"));
+	m_IDC_Link.SetWindowTextW(_T("Drag the File HEAR!!"));
+	m_IDC_Target.SetClearable();
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -163,6 +166,7 @@ void CVisualMKLINKDlg::OnBnClickedButtonMklink()
 	// TODO:  在此添加控件通知处理程序代码
 	BackgroundOperations bgo;
 	m_strResult = _T("");
+
 	for (int i = 0; i < m_IDC_Target.GetCount(); i++)
 	{
 		CString cmd;
@@ -216,6 +220,7 @@ void CVisualMKLINKDlg::OnBnClickedButtonMklink()
 					{
 						m_strResult += curNum + _T("ERROR:路径重复！\r\n");
 						UpdateData(FALSE);
+						continue;
 					}
 				}
 			}
