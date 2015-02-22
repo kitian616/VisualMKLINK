@@ -35,15 +35,16 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
+
+public:
+	
+
+private:
+	CListBoxX m_lstTarget;
+	CEditX m_edtLink;
+	CString m_strResult;
+	void InitUIPIFilter();
+
 public:
 	afx_msg void OnBnClickedButtonMklink();
-	//afx_msg void OnDropFiles(HDROP hDropInfo);
-private:
-	CListBoxX m_IDC_Target;
-	CEditX m_IDC_Link;
-	CString m_strResult;
-	void InitUIPIFilter();	
-public:
-	afx_msg void OnEnChangeEditLink();
-	afx_msg void OnStnClickedStaticResult();
 };

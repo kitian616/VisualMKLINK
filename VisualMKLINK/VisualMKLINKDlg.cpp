@@ -58,8 +58,8 @@ CVisualMKLINKDlg::CVisualMKLINKDlg(CWnd* pParent /*=NULL*/)
 void CVisualMKLINKDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_LIST_TARGET, m_IDC_Target);
-	DDX_Control(pDX, IDC_EDIT_LINK, m_IDC_Link);
+	DDX_Control(pDX, IDC_LIST_TARGET, m_lstTarget);
+	DDX_Control(pDX, IDC_EDIT_LINK, m_edtLink);
 	DDX_Text(pDX, IDC_EDIT_RESULT, m_strResult);
 }
 
@@ -103,9 +103,9 @@ BOOL CVisualMKLINKDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO:  在此添加额外的初始化代码
-	m_IDC_Target.AddString(_T("Drag the Files HEAR!!"));
-	m_IDC_Link.SetWindowTextW(_T("Drag the File HEAR!!"));
-	m_IDC_Target.SetClearable();
+	m_lstTarget.AddString(_T("Drag the Files HEAR! Right Mouse-click for More Functions."));
+	m_edtLink.SetWindowTextW(_T("Drag the File HEAR!"));
+	m_lstTarget.SetClearable();
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -165,20 +165,22 @@ void CVisualMKLINKDlg::OnBnClickedButtonMklink()
 {
 	// TODO:  在此添加控件通知处理程序代码
 	BackgroundOperations bgo;
+
+	//清空操作
 	m_strResult = _T("");
 
-	for (int i = 0; i < m_IDC_Target.GetCount(); i++)
+	for (int i = 0; i < m_lstTarget.GetCount(); i++)
 	{
 		CString cmd;
 		CString curNum;  //int i to CString
 		curNum.Format(_T("%d. "), i + 1);
 
 		CString targetPathString;
-		m_IDC_Target.GetText(i, targetPathString);
+		m_lstTarget.GetText(i, targetPathString);
 		FilePath targetPath(targetPathString);
 
 		CString linkPathString;
-		m_IDC_Link.GetWindowTextW(linkPathString);
+		m_edtLink.GetWindowTextW(linkPathString);
 		FilePath linkPath(linkPathString);
 
 		if (!targetPath.Exists())
@@ -200,7 +202,7 @@ void CVisualMKLINKDlg::OnBnClickedButtonMklink()
 			{
 				if (!linkPath.GetParent().Exists())
 				{
-					m_strResult += curNum + _T("ERROR:路径不存在！\r\n");
+					m_strResult += curNum + _T("ERROR:link路径不存在！\r\n");
 					UpdateData(FALSE);
 					continue;
 				}
@@ -209,7 +211,7 @@ void CVisualMKLINKDlg::OnBnClickedButtonMklink()
 			{
 				if (!linkPath.Exists())
 				{
-					m_strResult += curNum + _T("ERROR:路径不存在！\r\n");
+					m_strResult += curNum + _T("ERROR:link路径不存在！\r\n");
 					UpdateData(FALSE);
 					continue;
 				}
@@ -252,7 +254,7 @@ void CVisualMKLINKDlg::OnBnClickedButtonMklink()
 				{
 					if (!linkPath.GetParent().Exists())
 					{
-						m_strResult += curNum + _T("ERROR:路径不存在！\r\n");
+						m_strResult += curNum + _T("ERROR:link路径不存在！\r\n");
 						UpdateData(FALSE);
 						continue;
 					}

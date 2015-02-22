@@ -21,8 +21,9 @@ CListBoxX::~CListBoxX()
 
 
 BEGIN_MESSAGE_MAP(CListBoxX, CListBox)
-	ON_COMMAND(ID_MENU0_DELETE, &CListBoxX::OnMenuDelete)
+	ON_COMMAND(ID_MENU0_DELETE, &CListBoxX::OnMenu0Delete)
 	ON_WM_DROPFILES()
+	ON_COMMAND(ID_MENU0_CLEARALL, &CListBoxX::OnMenu0Clearall)
 END_MESSAGE_MAP()
 
 
@@ -31,27 +32,9 @@ void CListBoxX::SetClearable()
 	m_clearable = true;
 }
 
-// CListBoxWithMenu 消息处理程序
+/*CListBoxWithMenu 消息处理程序*/
 
-void CListBoxX::OnMenuDelete()
-{
-	// TODO:  在此添加命令处理程序代码
-	int listBox_index;
-	listBox_index = GetCurSel();
-	if (listBox_index == CB_ERR)
-	{
-		MessageBox(_T("请选中一个记录"));
-	}
-	else
-	{
-		//删除listbox 中的记录
-		DeleteString(listBox_index);
-
-	}
-}
-
-
-
+/*鼠标右键点击ListBox string 时，弹出菜单*/
 BOOL CListBoxX::PreTranslateMessage(MSG* pMsg)
 {
 	// TODO:  在此添加专用代码和/或调用基类
@@ -92,20 +75,21 @@ void CListBoxX::OnDropFiles(HDROP hDropInfo)
 	WCHAR wcStr[MAX_PATH];
 	for (int i = 0; i < DropCount; i++)
 	{
-		bool exit = FALSE;		//文件不存在
+		bool exist = FALSE;		//文件不存在
 		DragQueryFile(hDropInfo, i, wcStr, MAX_PATH);//获得拖曳的第i个文件的文件名
-		//同名文件只显示一次
+
+		/*除掉同名文件*/
 		for (int j = 0; j < GetCount(); j++)
 		{
 			CString listText = NULL;
 			GetText(j, listText);
 			if (wcStr == listText)
 			{
-				exit = TRUE;
+				exist = TRUE;
 			}
 
 		}
-		if (!exit)
+		if (!exist)
 		{
 			AddString(wcStr);
 		}
@@ -114,4 +98,27 @@ void CListBoxX::OnDropFiles(HDROP hDropInfo)
 	DragFinish(hDropInfo);  //拖放结束后,释放内存
 
 	CListBox::OnDropFiles(hDropInfo);
+}
+
+
+void CListBoxX::OnMenu0Delete()
+{
+	// TODO:  在此添加命令处理程序代码
+	int listBoxIndex;
+	listBoxIndex = GetCurSel();
+	if (listBoxIndex == CB_ERR)
+	{
+		MessageBox(_T("请选中一个记录"));
+	}
+	else
+	{
+		//删除listbox 中的记录
+		DeleteString(listBoxIndex);
+	}
+}
+
+void CListBoxX::OnMenu0Clearall()
+{
+	// TODO:  在此添加命令处理程序代码
+	ResetContent();	//清空ListBox
 }

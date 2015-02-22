@@ -33,7 +33,8 @@ bool FilePath::IsDirectory()
 bool FilePath::IsFile()
 {
 	//return PathIsFileSpec(m_filePath);
-	return !IsDirectory();
+	CString fileName = GetName();
+	return (-1 != fileName.Find('.'));
 }
 
 FilePath FilePath::GetParent()
@@ -41,6 +42,10 @@ FilePath FilePath::GetParent()
 	FilePath parentPath;
 	RemoveBackslash();
 	int pos = m_filePath.ReverseFind('\\');
+	if (-1 == pos)
+	{
+		return NULL;
+	}
 	parentPath.SetFilePathString(m_filePath.Left(pos));
 	return parentPath;
 }
@@ -50,12 +55,20 @@ CString FilePath::GetName()
 	CString fileName;
 	RemoveBackslash();
 	int pos = m_filePath.ReverseFind('\\');
+	if (-1 == pos)
+	{
+		return NULL;
+	}
 	fileName = m_filePath.Right(m_filePath.GetLength() - pos -1);
 	return fileName;
 }
 
 void FilePath::RemoveBackslash()
 {
+	if (0 == m_filePath.GetLength())
+	{
+		return;
+	}
 	int filePathLen = m_filePath.GetLength();
 	if (m_filePath.GetAt(filePathLen - 1) == '\\')
 	{
