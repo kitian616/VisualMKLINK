@@ -43,4 +43,7 @@ private:
 	CEditX m_IDC_Link;
 	CString m_strResult;
 	void InitUIPIFilter();	
+public:
+	afx_msg void OnEnChangeEditLink();
+	afx_msg void OnStnClickedStaticResult();
 };

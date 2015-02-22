@@ -60,7 +60,7 @@ void CVisualMKLINKDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST_TARGET, m_IDC_Target);
 	DDX_Control(pDX, IDC_EDIT_LINK, m_IDC_Link);
-	DDX_Text(pDX, IDC_STATIC_RESULT, m_strResult);
+	DDX_Text(pDX, IDC_EDIT_RESULT, m_strResult);
 }
 
 BEGIN_MESSAGE_MAP(CVisualMKLINKDlg, CDialogEx)
@@ -162,65 +162,105 @@ void CVisualMKLINKDlg::OnBnClickedButtonMklink()
 {
 	// TODO:  在此添加控件通知处理程序代码
 	BackgroundOperations bgo;
+	m_strResult = _T("");
 	for (int i = 0; i < m_IDC_Target.GetCount(); i++)
 	{
-		CString strTargetPath;
-		m_IDC_Target.GetText(i, strTargetPath);
-		DWORD targetFileAttritube = GetFileAttributes(strTargetPath);
-
-		CString strLinkPath;
-		m_IDC_Link.GetWindowTextW(strLinkPath);
-		DWORD linkFileAttritube = GetFileAttributes(strLinkPath);
 		CString cmd;
-		if (INVALID_FILE_ATTRIBUTES == targetFileAttritube)	//target路径必须存在
+		CString curNum;  //int i to CString
+		curNum.Format(_T("%d. "), i + 1);
+
+		CString targetPathString;
+		m_IDC_Target.GetText(i, targetPathString);
+		FilePath targetPath(targetPathString);
+
+		CString linkPathString;
+		m_IDC_Link.GetWindowTextW(linkPathString);
+		FilePath linkPath(linkPathString);
+
+		if (!targetPath.Exists())
 		{
-			MessageBox(_T("target路径不存在！"));
+			m_strResult += curNum + _T("ERROR:target路径不存在！\r\n");
+			UpdateData(FALSE);
 			break;
 		}
-		else if (FILE_ATTRIBUTE_DIRECTORY == targetFileAttritube)	//	目录
+		if (targetPath == linkPath)
 		{
-			if (INVALID_FILE_ATTRIBUTES == linkFileAttritube)	//	目录不存在
-			{
-				MessageBox(_T("link路径不存在！"));
-				break;
-			}
-			else if (FILE_ATTRIBUTE_DIRECTORY != linkFileAttritube)	//	文件
-			{
-				MessageBox(_T("link路径与target路径不匹配！"));
-				break;
-			}
-			cmd = _T("mklink /D \"") + strLinkPath + _T("\"  \"") + strTargetPath + _T("\"");
-			m_strResult = bgo.ExecuteCMD(cmd);
+			m_strResult += curNum + _T("ERROR:路径重复！\r\n");
+			UpdateData(FALSE);
+			continue;
 		}
-		else if (FILE_ATTRIBUTE_DIRECTORY != targetFileAttritube)	//文件
+
+		if (targetPath.IsFile())
 		{
-			if (INVALID_FILE_ATTRIBUTES == linkFileAttritube)	//	目录不存在
+			if (linkPath.IsFile())
 			{
-				MessageBox(_T("link路径不存在！"));
-				break;
+				if (!linkPath.GetParent().Exists())
+				{
+					m_strResult += curNum + _T("ERROR:路径不存在！\r\n");
+					UpdateData(FALSE);
+					continue;
+				}
 			}
-			else if (FILE_ATTRIBUTE_DIRECTORY == linkFileAttritube)	//	目录
+			else
 			{
-				char szFname[_MAX_FNAME];
-				char szExt[_MAX_EXT];
-				char szTargetPath[_MAX_PATH];
-				TypeConversion::CString2Char(strTargetPath, szTargetPath);
-				_splitpath_s(szTargetPath, NULL, 0, NULL, 0, szFname, _MAX_FNAME, szExt, _MAX_EXT);
-				CString strFname;
-				CString strExt;
-				TypeConversion::Char2CString(szFname, strFname);
-				TypeConversion::Char2CString(szExt, strExt);
-				strLinkPath = strLinkPath + _T('\\') + strFname + strExt;
-				
+				if (!linkPath.Exists())
+				{
+					m_strResult += curNum + _T("ERROR:路径不存在！\r\n");
+					UpdateData(FALSE);
+					continue;
+				}
+				else
+				{
+					linkPath.SetFilePathString(linkPath.GetFilePathString() + _T('\\') + targetPath.GetName());
+					if (linkPath == targetPath)
+					{
+						m_strResult += curNum + _T("ERROR:路径重复！\r\n");
+						UpdateData(FALSE);
+					}
+				}
 			}
-			cmd = _T("mklink /H \"") + strLinkPath + _T("\"  \"") + strTargetPath + _T("\"");  //文件的硬链接
-			m_strResult = bgo.ExecuteCMD(cmd);
+			cmd = _T("mklink /H \"") + linkPath.GetFilePathString() + _T('\"');
+			cmd += _T(' ');
+			cmd += _T('\"') + targetPath.GetFilePathString() + _T('\"');		//文件的硬链接
 		}
-		FilePath fp(_T("c:\\q\\wer\\qwrrt\\"));
-		CString sss = fp.GetParentPath().GetFilePath();
+		else
+		{
+			if (linkPath.IsFile())
+			{
+				m_strResult += curNum + _T("ERROR:类型不匹配！\r\n");
+				UpdateData(FALSE);
+				continue;
+			}
+			else
+			{
+				if (linkPath.Exists())
+				{
+					linkPath.SetFilePathString(linkPath.GetFilePathString() + _T('\\') + targetPath.GetName());
+					if (linkPath == targetPath)
+					{
+						m_strResult += curNum + _T("ERROR:路径重复！\r\n");
+						UpdateData(FALSE);
+						continue;
+					}
+				}
+				else
+				{
+					if (!linkPath.GetParent().Exists())
+					{
+						m_strResult += curNum + _T("ERROR:路径不存在！\r\n");
+						UpdateData(FALSE);
+						continue;
+					}
+				}
+			}
+			cmd = _T("mklink /D \"") + linkPath.GetFilePathString() + _T('\"');
+			cmd += _T(' ');
+			cmd += _T('\"') + targetPath.GetFilePathString() + _T('\"');
+		}
 		
+		m_strResult += curNum + bgo.ExecuteCMD(cmd) + _T("\r\n");
 		UpdateData(FALSE);
-	}
+	}//END FOR
 	
 }
 
@@ -240,3 +280,5 @@ void CVisualMKLINKDlg::InitUIPIFilter()
 		}
 	}
 }
+
+

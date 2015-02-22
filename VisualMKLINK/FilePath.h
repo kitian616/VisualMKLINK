@@ -12,22 +12,26 @@ private:
 	CString m_filePath;
 
 public:
-	void SetFilePath(CString filePath)
+	void SetFilePathString(CString filePath)
 	{
 		m_filePath = filePath;
 	}
 
-	CString GetFilePath()
+	CString GetFilePathString()
 	{
 		return m_filePath;
 	}
 
 public:
-	/*调用WIN API实现*/
-	BOOL Exists();		//判断路径是否存在
-	BOOL IsDirectory();	//判断是否为目录，路径为目录，且存在时为真
-	BOOL IsFile();
-	FilePath GetParentPath();
-	void RemoveBackslash();
+	bool Exists();		//判断路径是否存在
+	bool IsDirectory();	//判断是否为目录
+	bool IsFile();
+	FilePath GetParent();	//得到上一级目录
+	CString GetName();		//得到文件（文件夹）名
+	void RemoveBackslash();	//去除路径末尾的反斜线
+
+public:
+	//FilePath operator+ (FilePath &filePath) const;
+	bool operator== (FilePath &filePath) const;
 };
 

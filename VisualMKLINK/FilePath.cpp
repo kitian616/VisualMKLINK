@@ -14,7 +14,7 @@ FilePath::~FilePath()
 {
 }
 
-BOOL FilePath::Exists()
+bool FilePath::Exists()
 {
 	//winapi
 	/*TCHAR szFilePath[_MAX_PATH];
@@ -22,23 +22,36 @@ BOOL FilePath::Exists()
 	return PathFileExists(m_filePath);
 }
 
-BOOL FilePath::IsDirectory()
+bool FilePath::IsDirectory()
 {
-	return PathIsDirectory(m_filePath);
+	//return PathIsDirectory(m_filePath);
+	CString fileName = GetName();
+	return (-1 == fileName.Find('.'));
+
 }
 
-BOOL FilePath::IsFile()
+bool FilePath::IsFile()
 {
-	return PathIsFileSpec(m_filePath);
+	//return PathIsFileSpec(m_filePath);
+	return !IsDirectory();
 }
 
-FilePath FilePath::GetParentPath()
+FilePath FilePath::GetParent()
 {
 	FilePath parentPath;
 	RemoveBackslash();
 	int pos = m_filePath.ReverseFind('\\');
-	parentPath = m_filePath.Left(pos);
+	parentPath.SetFilePathString(m_filePath.Left(pos));
 	return parentPath;
+}
+
+CString FilePath::GetName()
+{
+	CString fileName;
+	RemoveBackslash();
+	int pos = m_filePath.ReverseFind('\\');
+	fileName = m_filePath.Right(m_filePath.GetLength() - pos -1);
+	return fileName;
 }
 
 void FilePath::RemoveBackslash()
@@ -48,5 +61,15 @@ void FilePath::RemoveBackslash()
 	{
 		m_filePath.Delete(filePathLen - 1);
 	}
+}
+
+//FilePath FilePath::operator + (FilePath &filePath) const
+//{
+//	CString lastFilePath = m_filePath + filePath.GetFilePathString();
+//	return FilePath(lastFilePath);
+//}
+bool FilePath::operator == (FilePath &filePath) const
+{
+	return (m_filePath == filePath.GetFilePathString());
 }
 
