@@ -103,8 +103,8 @@ BOOL CVisualMKLINKDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO:  在此添加额外的初始化代码
-	m_lstTarget.AddString(_T("Drag the Files HEAR! Right Mouse-click for More Functions."));
-	m_edtLink.SetWindowTextW(_T("Drag the File HEAR!"));
+	m_lstTarget.AddString(_T("Drop the TARGRT Files HEAR! Right Mouse-click for More Functions."));
+	m_edtLink.SetWindowTextW(_T("Drop the LINK File HEAR!"));
 	m_lstTarget.SetClearable();
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
@@ -165,9 +165,16 @@ void CVisualMKLINKDlg::OnBnClickedButtonMklink()
 {
 	// TODO:  在此添加控件通知处理程序代码
 	BackgroundOperations bgo;
-
+	UpdateData(TRUE);
 	//清空操作
 	m_strResult = _T("");
+
+	if (0 == m_lstTarget.GetCount())
+	{
+		m_strResult += _T("0. ERROR:target路径不存在！\r\n");
+		UpdateData(FALSE);
+		return;
+	}
 
 	for (int i = 0; i < m_lstTarget.GetCount(); i++)
 	{
