@@ -171,7 +171,7 @@ void CVisualMKLINKDlg::OnBnClickedButtonMklink()
 
 	if (0 == m_lstTarget.GetCount())
 	{
-		m_strResult += _T("0. ERROR:target路径不存在！\r\n");
+		m_strResult += _T("0. ERROR: Target path not exist!\r\n");
 		UpdateData(FALSE);
 		return;
 	}
@@ -192,13 +192,13 @@ void CVisualMKLINKDlg::OnBnClickedButtonMklink()
 
 		if (!targetPath.Exists())
 		{
-			m_strResult += curNum + _T("ERROR:target路径不存在！\r\n");
+			m_strResult += curNum + _T("ERROR: Target path not exist!\r\n");
 			UpdateData(FALSE);
 			break;
 		}
 		if (targetPath == linkPath)
 		{
-			m_strResult += curNum + _T("ERROR:路径重复！\r\n");
+			m_strResult += curNum + _T("ERROR: Path repetitions!\r\n");
 			UpdateData(FALSE);
 			continue;
 		}
@@ -209,7 +209,7 @@ void CVisualMKLINKDlg::OnBnClickedButtonMklink()
 			{
 				if (!linkPath.GetParent().Exists())
 				{
-					m_strResult += curNum + _T("ERROR:link路径不存在！\r\n");
+					m_strResult += curNum + _T("ERROR: Link path not exist!\r\n");
 					UpdateData(FALSE);
 					continue;
 				}
@@ -218,7 +218,7 @@ void CVisualMKLINKDlg::OnBnClickedButtonMklink()
 			{
 				if (!linkPath.Exists())
 				{
-					m_strResult += curNum + _T("ERROR:link路径不存在！\r\n");
+					m_strResult += curNum + _T("ERROR: Link path not exist!\r\n");
 					UpdateData(FALSE);
 					continue;
 				}
@@ -227,7 +227,7 @@ void CVisualMKLINKDlg::OnBnClickedButtonMklink()
 					linkPath.SetFilePathString(linkPath.GetFilePathString() + _T('\\') + targetPath.GetName());
 					if (linkPath == targetPath)
 					{
-						m_strResult += curNum + _T("ERROR:路径重复！\r\n");
+						m_strResult += curNum + _T("ERROR: Path repetitions!\r\n");
 						UpdateData(FALSE);
 						continue;
 					}
@@ -241,7 +241,7 @@ void CVisualMKLINKDlg::OnBnClickedButtonMklink()
 		{
 			if (linkPath.IsFile())
 			{
-				m_strResult += curNum + _T("ERROR:类型不匹配！\r\n");
+				m_strResult += curNum + _T("ERROR: Can not link a direction to a file!\r\n");
 				UpdateData(FALSE);
 				continue;
 			}
@@ -252,7 +252,7 @@ void CVisualMKLINKDlg::OnBnClickedButtonMklink()
 					linkPath.SetFilePathString(linkPath.GetFilePathString() + _T('\\') + targetPath.GetName());
 					if (linkPath == targetPath)
 					{
-						m_strResult += curNum + _T("ERROR:路径重复！\r\n");
+						m_strResult += curNum + _T("ERROR: Path repetitions!\r\n");
 						UpdateData(FALSE);
 						continue;
 					}
@@ -261,7 +261,7 @@ void CVisualMKLINKDlg::OnBnClickedButtonMklink()
 				{
 					if (!linkPath.GetParent().Exists())
 					{
-						m_strResult += curNum + _T("ERROR:link路径不存在！\r\n");
+						m_strResult += curNum + _T("ERROR: Link path not exist!\r\n");
 						UpdateData(FALSE);
 						continue;
 					}
