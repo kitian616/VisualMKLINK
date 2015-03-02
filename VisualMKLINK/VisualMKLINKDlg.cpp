@@ -225,9 +225,9 @@ void CVisualMKLINKDlg::OnBnClickedButtonMklink()
 				else
 				{
 					linkPath.SetFilePathString(linkPath.GetFilePathString() + _T('\\') + targetPath.GetName());
-					if (linkPath == targetPath)
+					if (linkPath.Exists())
 					{
-						m_strResult += curNum + _T("ERROR: Path repetitions!\r\n");
+						m_strResult += curNum + _T("ERROR: When the file already exists, unable to create the file.\r\n");
 						UpdateData(FALSE);
 						continue;
 					}
@@ -250,9 +250,9 @@ void CVisualMKLINKDlg::OnBnClickedButtonMklink()
 				if (linkPath.Exists())
 				{
 					linkPath.SetFilePathString(linkPath.GetFilePathString() + _T('\\') + targetPath.GetName());
-					if (linkPath == targetPath)
+					if (linkPath.Exists())
 					{
-						m_strResult += curNum + _T("ERROR: Path repetitions!\r\n");
+						m_strResult += curNum + _T("ERROR: When the file already exists, unable to create the file.\r\n");
 						UpdateData(FALSE);
 						continue;
 					}
